@@ -28,9 +28,9 @@ namespace API.Services
             return _shorturls.Find(shorturl => shorturl.Id == id).FirstOrDefault();
         }
 
-        public ShortUrl GetByPath(string path)
+        public ShortUrl GetByNanoid(string nanoid)
         {
-            return _shorturls.Find(shorturl => shorturl.Nanoid == path).FirstOrDefault();
+            return _shorturls.Find(shorturl => shorturl.Nanoid == nanoid).FirstOrDefault();
         }
 
         public void Remove(string id)

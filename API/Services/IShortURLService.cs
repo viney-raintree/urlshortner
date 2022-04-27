@@ -9,7 +9,7 @@ namespace API.Services
     public interface IShortURLService
     {
         ShortUrl Get(string id);
-        ShortUrl GetByPath(string path);
+        ShortUrl GetByNanoid(string nanoid);
         ShortUrl Create(ShortUrl url);
         void Update(string id, ShortUrl url);
         void Remove(string id);

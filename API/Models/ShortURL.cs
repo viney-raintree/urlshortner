@@ -28,5 +28,8 @@ namespace API.Models
         
         [BsonElement("cacheinmins")]
         public int CacheInMins {get; set;}
+
+        [BsonElement("shortenedURL")]
+        public string ShortenedURL { get; set; } = String.Empty;
     }
 }
