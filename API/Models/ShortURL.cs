@@ -24,7 +24,7 @@ namespace API.Models
         public string Nanoid { get; set; } = String.Empty;
 
         [BsonElement("subdomain")]
-        public string? Subdomain {get; set;}
+        public string Subdomain {get; set;} = String.Empty;
         
         [BsonElement("cacheinmins")]
         public int CacheInMins {get; set;}

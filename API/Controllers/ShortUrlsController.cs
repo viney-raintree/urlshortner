@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-//using API.Data;
 using API.Models;
 using API.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -10,80 +9,7 @@ using Microsoft.VisualBasic;
 using MongoDB.Driver;
 using Nanoid;
 
-/*
-[Route("api/[controller]")]
-[ApiController]
-public class StudentsController : ControllerBase
-{
-    private readonly IStudentService studentService;
 
-    public StudentsController(IStudentService studentService)
-    {
-        this.studentService = studentService;
-    }
-    // GET: api/<StudentsController>
-    [HttpGet]
-    public ActionResult<List<Student>> Get()
-    {
-        return studentService.Get();
-    }
-
-    // GET api/<StudentsController>/5
-    [HttpGet("{id}")]
-    public ActionResult<Student> Get(string id)
-    {
-        var student = studentService.Get(id);
-
-        if (student == null)
-        {
-            return NotFound($"Student with Id = {id} not found");
-        }
-
-        return student;
-    }
-
-    // POST api/<StudentsController>
-    [HttpPost]
-    public ActionResult<Student> Post([FromBody] Student student)
-    {
-        studentService.Create(student);
-
-        return CreatedAtAction(nameof(Get), new { id = student.Id }, student);
-    }
-
-    // PUT api/<StudentsController>/5
-    [HttpPut("{id}")]
-    public ActionResult Put(string id, [FromBody] Student student)
-    {
-        var existingStudent = studentService.Get(id);
-
-        if (existingStudent == null)
-        {
-            return NotFound($"Student with Id = {id} not found");
-        }
-
-        studentService.Update(id, student);
-
-        return NoContent();
-    }
-
-    // DELETE api/<StudentsController>/5
-    [HttpDelete("{id}")]
-    public ActionResult Delete(string id)
-    {
-        var student = studentService.Get(id);
-
-        if (student == null)
-        {
-            return NotFound($"Student with Id = {id} not found");
-        }
-
-        studentService.Remove(student.Id);
-
-        return Ok($"Student with Id = {id} deleted");
-    }
-}
-*/
 namespace API.Controllers
 {
     [ApiController]
@@ -97,27 +23,34 @@ namespace API.Controllers
             _shortURLService = shortURLService;
         }
 
+      [HttpGet("{id}")]
+        public ActionResult<ShortUrl> Get(string id)
+        {
+            var surl = _shortURLService.Get(id);
+
+            if (surl == null)
+            {
+                return NotFound($"Short URL with Id = {id} not found");
+            }
+
+            return surl;
+        }
 
        // POST api/<ShortUrlsController>
         [HttpPost]
-        public ActionResult Create([FromBody] ShortUrl shortUrl)
-//        public async Task<ActionResult> Create([FromBody] ShortUrl shortUrl)
+//        public ActionResult Create([FromBody] ShortUrl shortUrl)
+        public async Task<ActionResult> Create([FromBody] ShortUrl shortUrl)
         {
-            //TryValidateModel(shortUrl);
-            Console.WriteLine("outside validate");
-            //var Nanoid = "";
-           // if (ModelState.IsValid)
-            //{
+            TryValidateModel(shortUrl);
+            if (ModelState.IsValid)
+            {
                 var Nid = Nanoid.Nanoid.Generate(size:10);
-                Console.WriteLine("after validate",Nid);
+                Console.WriteLine(Nid);
                 _shortURLService.Create(shortUrl);
-                //return CreatedAtAction(nameof(RedirectTo), new { id = shortUrl.Id}, shortUrl);
-
+                //return CreatedAtAction(actionName: nameof(Get), new { id = shortUrl.Id, nanoid = Nid}, shortUrl);
                 return Content(Nid);
-                //return RedirectToAction(actionName: nameof(Show), routeValues: new { id = shortUrl.Id, nanoid = shortUrl.Nanoid });
-            //}
-            //return NotFound();
-            //return View(shortUrl);
+            }
+            return NotFound();
         }
 
         // public IActionResult Show(int? id)
@@ -154,5 +87,39 @@ namespace API.Controllers
 
             return Redirect(shortUrl.OriginalUrl);
         }
+
+    // PUT api/<ShortUrlsController>/id
+    [HttpPut("{id}")]
+    public ActionResult Put(string id, [FromBody] ShortUrl surl)
+    {
+        var urlobj = _shortURLService.Get(id);
+
+        if (urlobj == null)
+        {
+            return NotFound($"URL with Id = {id} not found");
+        }
+
+        _shortURLService.Update(id, surl);
+
+        return NoContent();
+    }
+
+    // DELETE api/<ShortUrlsController>/id
+    [HttpDelete("{id}")]
+    public ActionResult Delete(string id)
+    {
+        var urlobj = _shortURLService.Get(id);
+
+        if (urlobj == null)
+        {
+            return NotFound($"URL with Id = {id} not found");
+        }
+
+        _shortURLService.Remove(urlobj.Id);
+
+        return Ok($"URL with Id = {id} deleted");
+    }
+
+
     }
 }
