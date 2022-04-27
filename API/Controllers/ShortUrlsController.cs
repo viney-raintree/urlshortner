@@ -87,7 +87,7 @@ namespace API.Controllers
             }
 
             Console.WriteLine($"inside get, found url to redirect {shortUrlobj.OriginalUrl}");
-            return Redirect(shortUrlobj.OriginalUrl);
+            return RedirectPermanent(shortUrlobj.OriginalUrl);
         }
 
     // PUT api/<ShortUrlsController>/id
