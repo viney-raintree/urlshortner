@@ -77,19 +77,21 @@ namespace API.Controllers
 
         private static string MakeShortUrl(string host, string subdomain, string Nid)
         {
-	        string delim = "";
+            string delim = "";
             string shortenedURL = "";
-            if (host.IndexOf("www") < 0){
-            delim = "//";
+            if (host.IndexOf("www") < 0)
+            {
+                delim = "//";
             }
-            else{
-            delim = "//www.";	
+            else
+            {
+                delim = "//www.";
             }
             string[] tokens = host.Split(new[] { delim }, StringSplitOptions.None);
 
             if (tokens.Length > 1)
             {
-                shortenedURL = string.Concat(tokens[0],delim,subdomain, ".",tokens[1],"/",Nid);
+                shortenedURL = string.Concat(tokens[0], delim, subdomain, ".", tokens[1], "/", Nid);
             }
 
             return shortenedURL;
