@@ -52,7 +52,11 @@ namespace API.Controllers
                 var Nid = Nanoid.Nanoid.Generate(size:10);
                 var shortenedURL = "";
                 var addresses = _server.Features.Get<IServerAddressesFeature>().Addresses;
-                shortenedURL = string.Concat(addresses.ToArray<String>()[0], "/",Nid);
+                string hosturl = addresses.ToArray<String>()[0];
+                if (shortUrl.Subdomain == ""){
+                    shortenedURL = string.Concat(hosturl, "/",Nid);
+                }
+                else shortenedURL = MakeShortUrl(hosturl,shortUrl.Subdomain,Nid);
                 Console.WriteLine($"Shortened url: {shortenedURL}");                
                 shortUrl.Nanoid = Nid;
                 shortUrl.ShortenedURL = shortenedURL;
@@ -69,6 +73,26 @@ namespace API.Controllers
                 //return Content(shortenedURL);
             }
             return NotFound();
+        }
+
+        private static string MakeShortUrl(string host, string subdomain, string Nid)
+        {
+	        string delim = "";
+            string shortenedURL = "";
+            if (host.IndexOf("www") < 0){
+            delim = "//";
+            }
+            else{
+            delim = "//www.";	
+            }
+            string[] tokens = host.Split(new[] { delim }, StringSplitOptions.None);
+
+            if (tokens.Length > 1)
+            {
+                shortenedURL = string.Concat(tokens[0],delim,subdomain, ".",tokens[1],"/",Nid);
+            }
+
+            return shortenedURL;
         }
 
         [HttpGet("/{nanoid:required}", Name = "ShortUrls_RedirectTo")]
@@ -89,6 +113,7 @@ namespace API.Controllers
             Console.WriteLine($"inside get, found url to redirect {shortUrlobj.OriginalUrl}");
             return RedirectPermanent(shortUrlobj.OriginalUrl);
         }
+
 
     // PUT api/<ShortUrlsController>/id
     [HttpPut("{id}")]
